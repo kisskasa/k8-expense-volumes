@@ -119,14 +119,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: kasachandrasekhar/frontend:v1.0
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "150m"
-            memory: "256Mi"
+        image: joindevops/frontend:v1.0
         volumeMounts:
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
@@ -150,7 +143,7 @@ metadata:
   name: frontend
   namespace: expense
 spec:
-  #type: LoadBalancer
+  type: LoadBalancer
   selector:
     component: frontend
     project: expense
@@ -159,15 +152,3 @@ spec:
   - protocol: TCP
     port: 80 #service-port
     targetPort: 8080 #target-port
----
-apiVersion: elbv2.k8s.aws/v1beta1
-kind: TargetGroupBinding
-metadata:
-  name: frontend
-  namespace: expense
-spec:
-  serviceRef:
-    name: frontend # route traffic to the awesome-service
-    port: 80
-  targetGroupARN: arn:aws:elasticloadbalancing:us-east-1:315069654700:targetgroup/expense-dev-frontend/709ac65514f95b53
-  
